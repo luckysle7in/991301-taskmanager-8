@@ -35,16 +35,18 @@ const filters = [
   {name: `Archive`, numberOfIssues: getRandomNumber(10), isChecked: false}
 ];
 
-// Put all filters to the page
+// Get code for the list of the filters
+let filtersCode = ``;
 filters.forEach((filter) => {
-  mainFiltersNode.insertAdjacentHTML(`beforeend`,
-    getFilterElement(
-      filter['name'],
-      filter['numberOfIssues'],
-      filter['isChecked']
-    )
+  filtersCode += getFilterElement(
+    filter['name'],
+    filter['numberOfIssues'],
+    filter['isChecked']
   );
 });
+
+// Put all filters to the page
+mainFiltersNode.innerHTML = filtersCode;
 
 // Content to generate random tasks
 const taskColors = [
@@ -366,17 +368,22 @@ ${title}</textarea
   `;
 };
 
-// Put random tasks to the page, number of the tasks is taken from 'ALL' filter that chosen by default
-for (let i=0; i<filters[0]['numberOfIssues']; i++) {
-  boardTasksNode.insertAdjacentHTML(`beforeend`,
-    getTaskCard(
+// Get code for the list of tasks
+const getTasksCode = (number) => {
+  let tasksCode = ``;
+  for (let i=0; i<number; i++) {
+    tasksCode = tasksCode + getTaskCard(
       taskTitles[getRandomNumber(3)],
       taskColors[getRandomNumber(4)],
       taskTypes[getRandomNumber(3)],
       taskIsEdit[getRandomNumber(1)]
-    )
-  );
-}
+    );
+  }
+  return tasksCode;
+};
+
+// Put random tasks to the page, number of the tasks is taken from 'ALL' filter that chosen by default
+boardTasksNode.innerHTML = getTasksCode(filters[0]['numberOfIssues']);
 
 // Show new tasks, if a filter has changes. Number of the tasks is taken from filter that has chosen
 const filtersLinks = mainFiltersNode.getElementsByClassName('filter__label');
@@ -384,20 +391,10 @@ for (filtersLink of filtersLinks) {
 
   //Click event for each filter
   filtersLink.addEventListener('click', (event) => {
-
     const tasksNumber = event['currentTarget']['children'][0]['innerText'];
     boardTasksNode.innerHTML = '';
-
+    
     // Put new tasks to the page
-    for (let i=0; i<tasksNumber; i++) {
-      boardTasksNode.insertAdjacentHTML(`beforeend`,
-        getTaskCard(
-          taskTitles[getRandomNumber(3)],
-          taskColors[getRandomNumber(4)],
-          taskTypes[getRandomNumber(3)],
-          taskIsEdit[getRandomNumber(1)]
-        )
-      );
-    }
+    boardTasksNode.innerHTML = getTasksCode(tasksNumber);
   });
 }
