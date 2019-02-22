@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Андрей Иноземцев](https://up.htmlacademy.ru/ecmascript/8/user/991301).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Приходько](https://htmlacademy.ru/profile/id1012525).
 
 ---
 
