@@ -1,6 +1,6 @@
 export default  (title, type, color, isEdit = false) => {
   return `
-  <article class="card ${isEdit ? "card--edit" : ""} card--${color} ${type ? "card--" + type : ""}">
+  <article class="card ${isEdit ? `card--edit` : ``} card--${color} ${type ? `card--` + type : ``}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
