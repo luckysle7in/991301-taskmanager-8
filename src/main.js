@@ -76,10 +76,10 @@ boardTasksNode.innerHTML = getTasksCode(filters[0][`numberOfIssues`]);
 const filtersLinks = mainFiltersNode.getElementsByClassName(`filter__label`);
 for (let filtersLink of filtersLinks) {
 
-  //Click event for each filter
+  // Click event for each filter
   filtersLink.addEventListener(`click`, (event) => {
     const tasksNumber = event[`currentTarget`][`children`][0][`innerText`];
-    boardTasksNode.innerHTML = '';
+    boardTasksNode.innerHTML = ``;
 
     // Put new tasks to the page
     boardTasksNode.innerHTML = getTasksCode(tasksNumber);

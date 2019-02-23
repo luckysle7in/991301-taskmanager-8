@@ -1,4 +1,4 @@
-export default  (title, type, color, isEdit = false) => {
+export default (title, type, color, isEdit = false) => {
   return `
   <article class="card ${isEdit ? `card--edit` : ``} card--${color} ${type ? `card--` + type : ``}">
     <form class="card__form" method="get">
