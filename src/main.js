@@ -11,13 +11,12 @@ mainFiltersNode.innerHTML = getFiltersCode();
 boardTasksNode.innerHTML = getTasksCode(filters[0][`numberOfIssues`]);
 
 // Show new tasks, if a filter has changes. Number of the tasks is taken from filter that has chosen
-const filtersLinks = mainFiltersNode.getElementsByClassName(`filter__label`);
-for (let filtersLink of filtersLinks) {
-  // Click event for each filter
-  filtersLink.addEventListener(`click`, (event) => {
-    const tasksNumber = event[`currentTarget`][`children`][0][`innerText`];
-    boardTasksNode.innerHTML = ``;
-    // Put new tasks to the page
-    boardTasksNode.innerHTML = getTasksCode(tasksNumber);
-  });
-}
+mainFiltersNode.addEventListener('click', (event) => {
+  let target = event.target;
+  while (target != mainFiltersNode) {
+    if (target.tagName == 'LABEL') {
+      boardTasksNode.innerHTML = getTasksCode(target.getAttribute(`data-filter-count`));
+    }
+    target = target.parentNode;
+  }
+});
