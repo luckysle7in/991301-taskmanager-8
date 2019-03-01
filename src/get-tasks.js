@@ -1,13 +1,4 @@
-// Get random number from 0 to MAX
-const getRandomNumber = (max, min = 0) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
-// Get random boolean
-const randomBoolean = () => {
-  const variants = [true, false];
-  return variants[getRandomNumber(2)];
-};
+import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 
 // All variants of titles
 const taskTitles = [
@@ -71,13 +62,13 @@ const getPicture = () => {
 // Get random repeating days
 const getRepeatingDays = () => {
   return {
-    Mo: randomBoolean(),
-    Tu: randomBoolean(),
-    We: randomBoolean(),
-    Th: randomBoolean(),
-    Fr: randomBoolean(),
-    Sa: randomBoolean(),
-    Su: randomBoolean()
+    Mo: getRandomBoolean(),
+    Tu: getRandomBoolean(),
+    We: getRandomBoolean(),
+    Th: getRandomBoolean(),
+    Fr: getRandomBoolean(),
+    Sa: getRandomBoolean(),
+    Su: getRandomBoolean()
   };
 };
 
@@ -90,8 +81,8 @@ const getTaskData = () => {
     picture: getPicture(),
     color: getTaskColor(),
     repeatingDays: getRepeatingDays(),
-    isFavorite: randomBoolean(),
-    isDone: randomBoolean()
+    isFavorite: getRandomBoolean(),
+    isDone: getRandomBoolean()
   };
 };
 

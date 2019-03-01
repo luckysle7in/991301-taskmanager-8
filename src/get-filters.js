@@ -1,7 +1,4 @@
-// Get random number from 0 to MAX
-const getRandomNumber = (max) => {
-  return Math.floor(Math.random() * max);
-};
+import {getRandomNumber} from "./random-numbers.js";
 
 // Object with content for filters
 const filters = [

@@ -1,5 +1,5 @@
-import getFiltersCode, {filters} from "./get-filter-element.js";
-import getTasksCode from "./get-task-card.js";
+import getFiltersCode, {filters} from "./get-filters.js";
+import getTasksCode from "./get-tasks.js";
 
 const mainFiltersNode = document.getElementById(`main__filter`);
 const boardTasksNode = document.getElementById(`board__tasks`);
