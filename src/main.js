@@ -8,14 +8,14 @@ const boardTasksNode = document.getElementById(`board__tasks`);
 mainFiltersNode.innerHTML = getFiltersCode();
 
 // Put random tasks to the page, number of the tasks is taken from 'ALL' filter that chosen by default
-boardTasksNode.innerHTML = getTasksCode(filters[0][`numberOfIssues`]);
+getTasksCode(filters[0].numberOfIssues, boardTasksNode);
 
 // Show new tasks, if a filter has changes. Number of the tasks is taken from filter that has chosen
 mainFiltersNode.addEventListener(`click`, (event) => {
   let target = event.target;
   while (target !== mainFiltersNode) {
     if (target.tagName === `LABEL`) {
-      boardTasksNode.innerHTML = getTasksCode(target.getAttribute(`data-filter-count`));
+      getTasksCode(target.getAttribute(`data-filter-count`), boardTasksNode);
     }
     target = target.parentNode;
   }
