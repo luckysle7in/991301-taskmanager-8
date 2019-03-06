@@ -107,25 +107,29 @@ export default (tasksNumber, container) => {
     taskData[i] = getTaskData();
 
     // Create classes for default and edit states
-    taskComponent[i] = new Task(taskData[i]);
-    editTaskComponent[i] = new TaskEdit(taskData[i]);
+    const taskInstance = new Task(taskData[i]);
+    const taskEditInstance = new TaskEdit(taskData[i]);
 
     // Add default state to the page
-    container.appendChild(taskComponent[i].render());
+    container.appendChild(taskInstance.render());
 
     // 'Edit' event for the task card
-    taskComponent[i].onEdit = () => {
-      editTaskComponent[i].render();
-      container.replaceChild(editTaskComponent[i].element, taskComponent[i].element);
-      taskComponent[i].unrender();
+    taskInstance.onEdit = () => {
+      taskEditInstance.render();
+      container.replaceChild(taskEditInstance.element, taskInstance.element);
+      taskInstance.unrender();
     };
 
     // 'Submit' event for the task card
-    editTaskComponent[i].onSubmit = () => {
-      taskComponent[i].render();
-      container.replaceChild(taskComponent[i].element, editTaskComponent[i].element);
-      editTaskComponent[i].unrender();
+    taskEditInstance.onSubmit = () => {
+      taskInstance.render();
+      container.replaceChild(taskInstance.element, taskEditInstance.element);
+      taskEditInstance.unrender();
     };
+
+    // Send class instatces to array
+    taskComponent.push(taskInstance);
+    editTaskComponent.push(taskEditInstance);
 
   }
 };
