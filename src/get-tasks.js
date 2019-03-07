@@ -95,20 +95,15 @@ export default (tasksNumber, container) => {
   // Remove everything from tasts board
   container.innerHTML = ``;
 
-  // Create new arrays of data object, default and edit class states
-  const taskData = [];
-  const taskComponent = [];
-  const editTaskComponent = [];
-
   // Generate a few tasks
   for (let i = 0; i < tasksNumber; i++) {
 
     // Generate new data for the task
-    taskData[i] = getTaskData();
+    const taskData = getTaskData();
 
     // Create classes for default and edit states
-    const taskInstance = new Task(taskData[i]);
-    const taskEditInstance = new TaskEdit(taskData[i]);
+    const taskInstance = new Task(taskData);
+    const taskEditInstance = new TaskEdit(taskData);
 
     // Add default state to the page
     container.appendChild(taskInstance.render());
@@ -126,10 +121,6 @@ export default (tasksNumber, container) => {
       container.replaceChild(taskInstance.element, taskEditInstance.element);
       taskEditInstance.unrender();
     };
-
-    // Send class instatces to array
-    taskComponent.push(taskInstance);
-    editTaskComponent.push(taskEditInstance);
 
   }
 };
