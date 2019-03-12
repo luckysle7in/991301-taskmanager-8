@@ -1,7 +1,8 @@
-import createElement from "./create-element.js";
+import {Component} from "./component.js";
 
-class TaskEdit {
+class TaskEdit extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
@@ -9,10 +10,7 @@ class TaskEdit {
     this._repeatingDays = data.repeatingDays;
     this._color = data.color;
 
-    this._element = null;
-    this._state = {
-      isEdit: false
-    };
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
   _onSubmitButtonClick(evt) {
@@ -34,10 +32,6 @@ class TaskEdit {
 
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -166,20 +160,9 @@ class TaskEdit {
         .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.card__form`)
         .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 
 }
