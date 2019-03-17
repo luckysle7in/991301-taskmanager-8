@@ -1,5 +1,15 @@
 import {Component} from "./component.js";
 
+const moment = require(`moment`);
+
+const Color = {
+  blue: `card--blue`,
+  black: `card--black`,
+  yellow: `card--yellow`,
+  green: `card--green`,
+  pink: `card--pink`,
+};
+
 class Task extends Component {
   constructor(data) {
     super();
@@ -35,7 +45,7 @@ class Task extends Component {
 
   get template() {
     return `
-    <article class="card card--${this._color} ${this._isRepeated() ? `card--repeat` : ``}">
+    <article class="card ${Color[this._color]} ${this._isRepeated() ? `card--repeat` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -55,6 +65,9 @@ class Task extends Component {
           </div>
           <div class="card__settings">
             <div class="card__details">
+              <div class="card__dates">
+                ${moment(this._dueDate).format(`D MMMM, h:mm a`)}
+              </div>
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
     ${Array.from(this._tags).map((tag) => {
@@ -81,6 +94,13 @@ class Task extends Component {
   unbind() {
     this._element.querySelector(`.card__btn--edit`)
         .removeEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
+
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
   }
 
 }
