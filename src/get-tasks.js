@@ -1,3 +1,4 @@
+const moment = require(`moment`);
 import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 import {Task} from "./task.js";
 import {TaskEdit} from "./task-edit.js";
@@ -52,9 +53,12 @@ const getTaskColor = () => {
 
 // Get random date +-week from now
 const getDueDate = () => {
-  return Date.now()
-    - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000
-    + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000;
+  return moment()
+    .add(getRandomNumber(7), `days`)
+    .subtract(getRandomNumber(7), `days`)
+    .hours(getRandomNumber(20, 8))
+    .minutes(0)
+    .seconds(0);
 };
 
 // Get random picture
@@ -65,13 +69,13 @@ const getPicture = () => {
 // Get random repeating days
 const getRepeatingDays = () => {
   return {
-    Mo: getRandomBoolean(),
-    Tu: getRandomBoolean(),
-    We: getRandomBoolean(),
-    Th: getRandomBoolean(),
-    Fr: getRandomBoolean(),
-    Sa: getRandomBoolean(),
-    Su: getRandomBoolean()
+    mo: getRandomBoolean(),
+    tu: getRandomBoolean(),
+    we: getRandomBoolean(),
+    th: getRandomBoolean(),
+    fr: getRandomBoolean(),
+    sa: getRandomBoolean(),
+    su: getRandomBoolean()
   };
 };
 
@@ -104,6 +108,7 @@ export default (tasksNumber, container) => {
     // Create classes for default and edit states
     const taskInstance = new Task(taskData);
     const taskEditInstance = new TaskEdit(taskData);
+    // console.log(taskData);
 
     // Add default state to the page
     container.appendChild(taskInstance.render());
@@ -116,7 +121,14 @@ export default (tasksNumber, container) => {
     };
 
     // 'Submit' event for the task card
-    taskEditInstance.onSubmit = () => {
+    taskEditInstance.onSubmit = (newObject) => {
+      taskData.title = newObject.title;
+      taskData.tags = newObject.tags;
+      taskData.color = newObject.color;
+      taskData.repeatingDays = newObject.repeatingDays;
+      taskData.dueDate = newObject.dueDate;
+
+      taskInstance.update(taskData);
       taskInstance.render();
       container.replaceChild(taskInstance.element, taskEditInstance.element);
       taskEditInstance.unrender();
