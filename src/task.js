@@ -20,6 +20,11 @@ class Task extends Component {
     this._repeatingDays = data.repeatingDays;
     this._color = data.color;
 
+    this._isFavorite = data.isFavorite;
+    this._isDeleted = data.isDeleted;
+
+    this._onChangeFavorite = this._onChangeFavorite.bind(this);
+    this._onSaveFavorite = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
@@ -39,8 +44,26 @@ class Task extends Component {
     }
   }
 
+  _onChangeFavorite() {
+    this._isFavorite = !this._isFavorite;
+    this.unbind();
+    if (typeof this._onSaveFavorite === `function`) {
+      this._onSaveFavorite(this._isFavorite);
+    }
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+
   set onEdit(fn) {
     this._onEdit = fn;
+  }
+
+  set onSaveFavorite(fn) {
+    this._onSaveFavorite = fn;
   }
 
   get template() {
@@ -51,7 +74,11 @@ class Task extends Component {
           <div class="card__control">
             <button type="button" class="card__btn card__btn--edit">edit</button>
             <button type="button" class="card__btn card__btn--archive">archive</button>
-            <button type="button" class="card__btn card__btn--favorites card__btn--disabled">favorites</button>
+            <button type="button"
+              class="card__btn card__btn--favorites ${this._isFavorite ? `` : `card__btn--disabled`}"
+            >
+              favorites
+            </button>
           </div>
           <div class="card__color-bar">
             <svg class="card__color-bar-wave" width="100%" height="10">
@@ -66,7 +93,7 @@ class Task extends Component {
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
-                ${moment(this._dueDate).format(`D MMMM, h:mm a`)}
+                ${this._dueDate.toString() === (new Date(0)).toString() ? `` : moment(this._dueDate).format(`D MMMM, h:mm a`) }
               </div>
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
@@ -89,18 +116,26 @@ class Task extends Component {
   bind() {
     this._element.querySelector(`.card__btn--edit`)
         .addEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.querySelector(`.card__btn--favorites`)
+        .addEventListener(`click`, this._onChangeFavorite);
   }
 
   unbind() {
     this._element.querySelector(`.card__btn--edit`)
         .removeEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.querySelector(`.card__btn--favorites`)
+        .removeEventListener(`click`, this._onChangeFavorite);
   }
 
   update(data) {
     this._title = data.title;
     this._tags = data.tags;
     this._color = data.color;
+    this._dueDate = data.dueDate;
     this._repeatingDays = data.repeatingDays;
+    if (data.isFavorite === true || data.isFavorite === false) {
+      this._isFavorite = data.isFavorite;
+    }
   }
 
 }
