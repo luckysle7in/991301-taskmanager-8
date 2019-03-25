@@ -1,4 +1,4 @@
-const moment = require(`moment`);
+import moment from "moment";
 import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 import {Task} from "./task.js";
 import {TaskEdit} from "./task-edit.js";
@@ -89,25 +89,33 @@ const getTaskData = () => {
     color: getTaskColor(),
     repeatingDays: getRepeatingDays(),
     isFavorite: getRandomBoolean(),
-    isDone: getRandomBoolean()
+    isDone: getRandomBoolean(),
+    isDeleted: false,
   };
 };
 
+const getAllTasksData = (count) => {
+  const allTasksData = [];
+  for (let i = 0; i < count; i++) {
+    allTasksData.push(getTaskData());
+  }
+  return allTasksData;
+};
 
 // Put a few tasks to the booard
-export default (tasksNumber, container) => {
+export default (tasksData, container) => {
   // Remove everything from tasts board
   container.innerHTML = ``;
 
   // Generate a few tasks
-  for (let i = 0; i < tasksNumber; i++) {
+  for (let i = 0; i < tasksData.length; i++) {
 
     // Generate new data for the task
-    const taskData = getTaskData();
+    const task = tasksData[i];
 
     // Create classes for default and edit states
-    const taskInstance = new Task(taskData);
-    const taskEditInstance = new TaskEdit(taskData);
+    const taskInstance = new Task(task);
+    const taskEditInstance = new TaskEdit(task);
     // console.log(taskData);
 
     // Add default state to the page
@@ -122,17 +130,36 @@ export default (tasksNumber, container) => {
 
     // 'Submit' event for the task card
     taskEditInstance.onSubmit = (newObject) => {
-      taskData.title = newObject.title;
-      taskData.tags = newObject.tags;
-      taskData.color = newObject.color;
-      taskData.repeatingDays = newObject.repeatingDays;
-      taskData.dueDate = newObject.dueDate;
+      task.title = newObject.title;
+      task.tags = newObject.tags;
+      task.color = newObject.color;
+      task.repeatingDays = newObject.repeatingDays;
+      task.dueDate = newObject.dueDate;
 
-      taskInstance.update(taskData);
+      taskInstance.update(task);
       taskInstance.render();
       container.replaceChild(taskInstance.element, taskEditInstance.element);
       taskEditInstance.unrender();
     };
 
+    const onSaveFavorite = (isFavorite) => {
+      task.isFavorite = isFavorite;
+      taskInstance.update(task);
+      taskEditInstance.update(task);
+    };
+
+    taskEditInstance.onSaveFavorite = onSaveFavorite;
+
+    taskInstance.onSaveFavorite = onSaveFavorite;
+
+    // 'Delete' event for the task card
+    taskEditInstance.onDelete = () => {
+      task.isDeleted = true;
+      container.removeChild(taskEditInstance.element);
+      taskEditInstance.unrender();
+    };
+
   }
 };
+
+export {getAllTasksData};

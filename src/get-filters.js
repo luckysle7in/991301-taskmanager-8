@@ -1,50 +1,25 @@
-import {getRandomNumber} from "./random-numbers.js";
+import {Filter} from "./filter.js";
 
 // Object with content for filters
-const filters = [
-  {name: `All`, numberOfIssues: getRandomNumber(10), isChecked: true},
-  {name: `Overdue`, numberOfIssues: getRandomNumber(10), isChecked: false},
-  {name: `Today`, numberOfIssues: getRandomNumber(10), isChecked: false},
-  {name: `Favorites`, numberOfIssues: getRandomNumber(10), isChecked: false},
-  {name: `Repeating`, numberOfIssues: getRandomNumber(10), isChecked: false},
-  {name: `Tags`, numberOfIssues: getRandomNumber(10), isChecked: false},
-  {name: `Archive`, numberOfIssues: getRandomNumber(10), isChecked: false}
+const filtersData = [
+  {title: `All`, isChecked: true},
+  {title: `Overdue`, isChecked: false},
+  {title: `Today`, isChecked: false},
+  // {title: `Favorites`, isChecked: false},
+  {title: `Repeating`, isChecked: false},
+  // {title: `Tags`, isChecked: false},
+  // {title: `Archive`, isChecked: false}
 ];
 
-// Get code for one filter
-const getFilterElement = (caption, amount, isChecked = false) => {
-  const captionLowerCase = caption.toLowerCase();
-  return `
-    <input
-      type="radio"
-      id="filter__${captionLowerCase}"
-      class="filter__input visually-hidden"
-      name="filter"
-      ${isChecked ? `checked` : ``}
-      ${amount === 0 ? `disabled` : ``}
-    />
-    <label
-      for="filter__${captionLowerCase}"
-      class="filter__label"
-      data-filter="${captionLowerCase}"
-      data-filter-count="${amount}"
-    >
-      ${caption} <span class="filter__${captionLowerCase}-count">${amount}</span>
-    </label>
-  `;
-};
-
 // Get code for the list of the filters
-export default () => {
-  let filtersCode = ``;
-  filters.forEach((filter) => {
-    filtersCode += getFilterElement(
-        filter[`name`],
-        filter[`numberOfIssues`],
-        filter[`isChecked`]
-    );
-  });
-  return filtersCode;
+export default (filters, container) => {
+  container.innerHTML = ``;
+  let filtersFragment = document.createDocumentFragment();
+  for (let i = 0; i < filters.length; i++) {
+    const filterInstance = new Filter(filters[i]);
+    filtersFragment.appendChild(filterInstance.render());
+  }
+  container.appendChild(filtersFragment);
 };
 
-export {filters};
+export {filtersData};
