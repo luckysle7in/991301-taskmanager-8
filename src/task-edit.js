@@ -1,7 +1,6 @@
 import flatpickr from "flatpickr";
 import {Component} from "./component.js";
-
-const moment = require(`moment`);
+import moment from "moment";
 
 const Color = {
   blue: `card--blue`,

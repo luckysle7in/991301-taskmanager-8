@@ -2,14 +2,18 @@ import renderFilters, {filtersData} from "./get-filters.js";
 import renderTasks, {getAllTasksData} from "./get-tasks.js";
 import {tagsChartConfig, colorsChartConfig} from "./chart.js";
 import flatpickr from "flatpickr";
-import Chart from 'chart.js';
+import Chart from "chart.js";
+import moment from "moment";
 
-const moment = require(`moment`);
 const mainFiltersNode = document.getElementById(`main__filter`);
 const boardTasksNode = document.getElementById(`board__tasks`);
 const filters = document.querySelector(`.filter`);
 const tagsStatisticNode = document.querySelector(`.statistic__tags`);
 const colorsStatisticNode = document.querySelector(`.statistic__colors`);
+const controlStatisticLink = document.getElementById(`control__statistic`);
+const boardNode = document.querySelector(`.board.container`);
+const statisticNode = document.querySelector(`.statistic`);
+const controlTaskNode = document.getElementById(`control__task`);
 
 // Rendering tasks
 const tasksData = getAllTasksData(7);
@@ -59,9 +63,9 @@ filters.onchange = (evt) => {
 };
 
 // Open statistic
-document.getElementById(`control__statistic`).addEventListener(`click`, () => {
-  document.querySelector(`.board.container`).classList.add(`visually-hidden`);
-  document.querySelector(`.statistic`).classList.remove(`visually-hidden`);
+controlStatisticLink.addEventListener(`click`, () => {
+  boardNode.classList.add(`visually-hidden`);
+  statisticNode.classList.remove(`visually-hidden`);
 
   const dateStart = new Date();
   const dateFinish = new Date();
@@ -91,7 +95,7 @@ document.getElementById(`control__statistic`).addEventListener(`click`, () => {
 });
 
 // Open tasks
-document.getElementById(`control__task`).addEventListener(`click`, () => {
-  document.querySelector(`.board.container`).classList.remove(`visually-hidden`);
-  document.querySelector(`.statistic`).classList.add(`visually-hidden`);
+controlTaskNode.addEventListener(`click`, () => {
+  boardNode.classList.remove(`visually-hidden`);
+  statisticNode.classList.add(`visually-hidden`);
 });

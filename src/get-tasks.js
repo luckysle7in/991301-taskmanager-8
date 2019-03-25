@@ -1,4 +1,4 @@
-const moment = require(`moment`);
+import moment from "moment";
 import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 import {Task} from "./task.js";
 import {TaskEdit} from "./task-edit.js";
@@ -102,7 +102,6 @@ const getAllTasksData = (count) => {
   return allTasksData;
 };
 
-
 // Put a few tasks to the booard
 export default (tasksData, container) => {
   // Remove everything from tasts board
@@ -143,17 +142,15 @@ export default (tasksData, container) => {
       taskEditInstance.unrender();
     };
 
-    taskEditInstance.onSaveFavorite = (isFavorite) => {
+    const onSaveFavorite = (isFavorite) => {
       task.isFavorite = isFavorite;
       taskInstance.update(task);
       taskEditInstance.update(task);
     };
 
-    taskInstance.onSaveFavorite = (isFavorite) => {
-      task.isFavorite = isFavorite;
-      taskInstance.update(task);
-      taskEditInstance.update(task);
-    };
+    taskEditInstance.onSaveFavorite = onSaveFavorite;
+
+    taskInstance.onSaveFavorite = onSaveFavorite;
 
     // 'Delete' event for the task card
     taskEditInstance.onDelete = () => {

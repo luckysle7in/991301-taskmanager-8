@@ -13,10 +13,13 @@ const filtersData = [
 
 // Get code for the list of the filters
 export default (filters, container) => {
+  container.innerHTML = ``;
+  let filtersFragment = document.createDocumentFragment();
   for (let i = 0; i < filters.length; i++) {
     const filterInstance = new Filter(filters[i]);
-    container.appendChild(filterInstance.render());
+    filtersFragment.appendChild(filterInstance.render());
   }
+  container.appendChild(filtersFragment);
 };
 
 export {filtersData};
