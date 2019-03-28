@@ -2,6 +2,13 @@ import moment from "moment";
 import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 import {Task} from "./task.js";
 import {TaskEdit} from "./task-edit.js";
+import {API} from "./api.js";
+
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
+
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 // All variants of titles
 const taskTitles = [
@@ -130,16 +137,41 @@ export default (tasksData, container) => {
 
     // 'Submit' event for the task card
     taskEditInstance.onSubmit = (newObject) => {
+
       task.title = newObject.title;
       task.tags = newObject.tags;
       task.color = newObject.color;
       task.repeatingDays = newObject.repeatingDays;
       task.dueDate = newObject.dueDate;
 
-      taskInstance.update(task);
-      taskInstance.render();
-      container.replaceChild(taskInstance.element, taskEditInstance.element);
-      taskEditInstance.unrender();
+      const block = () => {
+        taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `black`;
+        taskEditInstance.element.querySelector(`.card__save`).disabled = true;
+        taskEditInstance.element.querySelector(`.card__text`).disabled = true;
+        taskEditInstance.element.querySelector(`.card__save`).innerHTML = `Saving...`;
+      };
+      const unblock = () => {
+        taskEditInstance.element.querySelector(`.card__save`).disabled = false;
+        taskEditInstance.element.querySelector(`.card__text`).disabled = false;
+        taskEditInstance.element.querySelector(`.card__save`).innerHTML = `Save`;
+      };
+
+      // Updating task
+      block();
+      api.updateTask({id: task.id, data: task.toRAW()})
+        .then(() => {
+          unblock();
+          taskInstance.update(task);
+          taskInstance.render();
+          container.replaceChild(taskInstance.element, taskEditInstance.element);
+          taskEditInstance.unrender();
+        })
+        .catch(() => {
+          taskEditInstance.shake();
+          taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `red`;
+          unblock();
+        });
+
     };
 
     const onSaveFavorite = (isFavorite) => {
@@ -154,10 +186,35 @@ export default (tasksData, container) => {
 
     // 'Delete' event for the task card
     taskEditInstance.onDelete = () => {
-      task.isDeleted = true;
-      container.removeChild(taskEditInstance.element);
-      taskEditInstance.unrender();
+
+      const block = () => {
+        taskEditInstance.element.querySelector(`.card__save`).disabled = true;
+        taskEditInstance.element.querySelector(`.card__delete`).disabled = true;
+        taskEditInstance.element.querySelector(`.card__delete`).innerHTML = `Deleting...`;
+      };
+      const unblock = () => {
+        taskEditInstance.element.querySelector(`.card__save`).disabled = false;
+        taskEditInstance.element.querySelector(`.card__delete`).disabled = false;
+        taskEditInstance.element.querySelector(`.card__delete`).innerHTML = `Delete`;
+      };
+
+      // Deleting task
+      block();
+      api.deleteTask({id: task.id})
+        .then(() => {
+          unblock();
+          task.isDeleted = true;
+          container.removeChild(taskEditInstance.element);
+          taskEditInstance.unrender();
+        })
+        .catch(() => {
+          taskEditInstance.shake();
+          taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `red`;
+          unblock();
+        });
+
     };
+
 
   }
 };

@@ -13,6 +13,7 @@ const Color = {
 class TaskEdit extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
@@ -337,6 +338,15 @@ class TaskEdit extends Component {
         taskData.dueDate.setSeconds(0);
       }
     };
+  }
+
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
   }
 
 }

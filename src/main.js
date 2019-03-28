@@ -1,10 +1,13 @@
 import renderFilters, {filtersData} from "./get-filters.js";
-import renderTasks, {getAllTasksData} from "./get-tasks.js";
+import renderTasks from "./get-tasks.js";
 import {tagsChartConfig, colorsChartConfig} from "./chart.js";
+import {API} from "./api.js";
 import flatpickr from "flatpickr";
 import Chart from "chart.js";
 import moment from "moment";
 
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
 const mainFiltersNode = document.getElementById(`main__filter`);
 const boardTasksNode = document.getElementById(`board__tasks`);
 const filters = document.querySelector(`.filter`);
@@ -14,10 +17,36 @@ const controlStatisticLink = document.getElementById(`control__statistic`);
 const boardNode = document.querySelector(`.board.container`);
 const statisticNode = document.querySelector(`.statistic`);
 const controlTaskNode = document.getElementById(`control__task`);
+const getTasksStatus = document.querySelector(`.board__no-tasks`);
+
+
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+let tasksData = [];
+
+const getTasksBlock = () => {
+  getTasksStatus.classList.remove(`visually-hidden`);
+  getTasksStatus.innerHTML = `Loading tasks...`;
+};
+const getTasksUnblock = () => {
+  getTasksStatus.classList.add(`visually-hidden`);
+  getTasksStatus.innerHTML = ``;
+};
+const getTasksError = () => {
+  getTasksStatus.classList.remove(`visually-hidden`);
+  getTasksStatus.innerHTML = `Something went wrong while loading your tasks.<br />Check your connection or try again later`;
+};
 
 // Rendering tasks
-const tasksData = getAllTasksData(7);
-renderTasks(tasksData, boardTasksNode);
+getTasksBlock();
+api.getTasks()
+  .then((tasks) => {
+    getTasksUnblock();
+    renderTasks(tasks, boardTasksNode);
+    tasksData = tasks;
+  })
+  .catch(() => {
+    getTasksError();
+  });
 
 // Rendering filters
 renderFilters(filtersData, mainFiltersNode);

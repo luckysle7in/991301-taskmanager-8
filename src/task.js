@@ -12,6 +12,7 @@ const Color = {
 class Task extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
