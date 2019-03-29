@@ -1,4 +1,5 @@
 import {ModelTask} from "./model-task.js";
+import {AUTHORIZATION, END_POINT} from "./consts.js";
 
 const Method = {
   GET: `GET`,
@@ -68,4 +69,6 @@ const API = class {
   }
 };
 
-export {API};
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+export {API, api};

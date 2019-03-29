@@ -2,13 +2,7 @@ import moment from "moment";
 import {getRandomNumber, getRandomBoolean} from "./random-numbers.js";
 import {Task} from "./task.js";
 import {TaskEdit} from "./task-edit.js";
-import {API} from "./api.js";
-
-
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
-
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+import {api} from "./api.js";
 
 // All variants of titles
 const taskTitles = [
@@ -135,8 +129,12 @@ export default (tasksData, container) => {
       taskInstance.unrender();
     };
 
+
     // 'Submit' event for the task card
     taskEditInstance.onSubmit = (newObject) => {
+      const taskEditInstanceCardInner = taskEditInstance.element.querySelector(`.card__inner`);
+      const taskEditInstanceCardSave = taskEditInstance.element.querySelector(`.card__save`);
+      const taskEditInstanceCardText = taskEditInstance.element.querySelector(`.card__text`);
 
       task.title = newObject.title;
       task.tags = newObject.tags;
@@ -145,15 +143,15 @@ export default (tasksData, container) => {
       task.dueDate = newObject.dueDate;
 
       const block = () => {
-        taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `black`;
-        taskEditInstance.element.querySelector(`.card__save`).disabled = true;
-        taskEditInstance.element.querySelector(`.card__text`).disabled = true;
-        taskEditInstance.element.querySelector(`.card__save`).innerHTML = `Saving...`;
+        taskEditInstanceCardInner.style.borderColor = `black`;
+        taskEditInstanceCardSave.disabled = true;
+        taskEditInstanceCardText.disabled = true;
+        taskEditInstanceCardSave.innerHTML = `Saving...`;
       };
       const unblock = () => {
-        taskEditInstance.element.querySelector(`.card__save`).disabled = false;
-        taskEditInstance.element.querySelector(`.card__text`).disabled = false;
-        taskEditInstance.element.querySelector(`.card__save`).innerHTML = `Save`;
+        taskEditInstanceCardSave.disabled = false;
+        taskEditInstanceCardText.disabled = false;
+        taskEditInstanceCardSave.innerHTML = `Save`;
       };
 
       // Updating task
@@ -168,7 +166,7 @@ export default (tasksData, container) => {
         })
         .catch(() => {
           taskEditInstance.shake();
-          taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `red`;
+          taskEditInstanceCardInner.style.borderColor = `red`;
           unblock();
         });
 
@@ -186,16 +184,19 @@ export default (tasksData, container) => {
 
     // 'Delete' event for the task card
     taskEditInstance.onDelete = () => {
+      const taskEditInstanceCardInner = taskEditInstance.element.querySelector(`.card__inner`);
+      const taskEditInstanceCardSave = taskEditInstance.element.querySelector(`.card__save`);
+      const taskEditInstanceCardDelete = taskEditInstance.element.querySelector(`.card__delete`);
 
       const block = () => {
-        taskEditInstance.element.querySelector(`.card__save`).disabled = true;
-        taskEditInstance.element.querySelector(`.card__delete`).disabled = true;
-        taskEditInstance.element.querySelector(`.card__delete`).innerHTML = `Deleting...`;
+        taskEditInstanceCardSave.disabled = true;
+        taskEditInstanceCardDelete.disabled = true;
+        taskEditInstanceCardDelete.innerHTML = `Deleting...`;
       };
       const unblock = () => {
-        taskEditInstance.element.querySelector(`.card__save`).disabled = false;
-        taskEditInstance.element.querySelector(`.card__delete`).disabled = false;
-        taskEditInstance.element.querySelector(`.card__delete`).innerHTML = `Delete`;
+        taskEditInstanceCardSave.disabled = false;
+        taskEditInstanceCardDelete.disabled = false;
+        taskEditInstanceCardDelete.innerHTML = `Delete`;
       };
 
       // Deleting task
@@ -209,7 +210,7 @@ export default (tasksData, container) => {
         })
         .catch(() => {
           taskEditInstance.shake();
-          taskEditInstance.element.querySelector(`.card__inner`).style.borderColor = `red`;
+          taskEditInstanceCardInner.style.borderColor = `red`;
           unblock();
         });
 

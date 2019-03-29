@@ -1,13 +1,11 @@
 import renderFilters, {filtersData} from "./get-filters.js";
 import renderTasks from "./get-tasks.js";
 import {tagsChartConfig, colorsChartConfig} from "./chart.js";
-import {API} from "./api.js";
+import {api} from "./api.js";
 import flatpickr from "flatpickr";
 import Chart from "chart.js";
 import moment from "moment";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
 const mainFiltersNode = document.getElementById(`main__filter`);
 const boardTasksNode = document.getElementById(`board__tasks`);
 const filters = document.querySelector(`.filter`);
@@ -20,7 +18,6 @@ const controlTaskNode = document.getElementById(`control__task`);
 const getTasksStatus = document.querySelector(`.board__no-tasks`);
 
 
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 let tasksData = [];
 
 const getTasksBlock = () => {
